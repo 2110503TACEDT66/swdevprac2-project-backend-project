@@ -7,18 +7,11 @@ interface RestaurantItem {
   postalcode: string,
   tel: string,
   openingHours: {
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    opens: { type: String},
-    closes: { type: String}
+    dayOfWeek: string,
+    opens: String,
+    closes: String
   },
-  table: {
-    tableNumber: { type: String },
-    capacity: { type: Number },
-    timeSlots: {
-      start: { type: String },
-      end: { type: String }
-    }
-  },
+  table: Table[],
   picture: string,
   __v: number,
   id: string
@@ -36,15 +29,17 @@ interface BookingItem {
   name: string,
   surname: string,
   id: string,
+  table: string,
   restaurant: string,
-  bookDate: string
+  startBookTime: string,
+  endBookTime: string
 }
 
-interface table{
+interface Table{
   tableNumber: string,
   capacity: number,
-  timeSlots: {
+  timeSlots: [{
     start: string,
     end: string
-  }
+  }]
 }

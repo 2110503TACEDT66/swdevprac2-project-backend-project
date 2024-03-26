@@ -32,10 +32,13 @@ export default function BookingList() {
                         Citizen ID: {item.id}
                         </div>
                         <div>
-                        Hospital: {item.restaurant}
+                        Restaurant: {item.restaurant}
                         </div>
                         <div>
-                        Book Date: {item.bookDate}
+                        Start At: {item.startBookTime}
+                        </div>
+                        <div>
+                        End At: {item.endBookTime}
                         </div>
                         <button onClick={() => {removeBookingHandler(item.id)}}
                         className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE]

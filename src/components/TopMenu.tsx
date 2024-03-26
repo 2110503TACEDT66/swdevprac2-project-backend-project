@@ -26,8 +26,8 @@ export default async function TopMenu() {
                         :  <Link href={'/api/auth/signin'} > 
                             <div className='w-28 flex px-2 text-[#595c5b] text-sm text-center font-mono font-medium justify-center items-center h-full'>
                                 Sign-In
-                            </div>  
-                        </Link> 
+                            </div>
+                        </Link>
                 }
                 <Link href="/mybooking">
                     <div className='w-28 flex justify-center items-center px-2 text-[#595c5b] text-sm text-center font-mono font-medium h-full'>

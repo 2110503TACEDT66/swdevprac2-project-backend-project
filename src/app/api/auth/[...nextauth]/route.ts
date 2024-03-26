@@ -2,6 +2,7 @@ import NextAuth from "next-auth/next";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import userLogin from "@/libs/userLogIn";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -15,7 +16,8 @@ export const authOptions: AuthOptions = {
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
               email: { label: "Email", type: "email", placeholder: "email" },
-              password: { label: "Password", type: "password" }
+              password: { label: "Password", type: "password", placeholder:"password" }
+              
             },
             async authorize(credentials, req) {
               if(!credentials){ return null }
@@ -31,8 +33,16 @@ export const authOptions: AuthOptions = {
                 // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
               }
             }
+          }),
+          GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
           })
+          
     ],
+    pages: {
+      signIn: "/auth/login"
+    },
     session: {strategy:'jwt'},
     callbacks: {
         async jwt({token, user}) {

@@ -96,6 +96,7 @@ export const authOptions: AuthOptions = {
         },
         async session({session, token, user}) {
             session.user.role = token.role
+            session.user = token as any
             return session
         },
         async redirect({ url, baseUrl }) {

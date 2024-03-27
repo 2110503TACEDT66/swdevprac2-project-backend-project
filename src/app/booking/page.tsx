@@ -1,6 +1,5 @@
 'use client'
 import { TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material"
-import DateReserve from "@/components/DateReserve"
 import dayjs,{ Dayjs } from "dayjs"
 import { useState,useEffect } from "react"
 import getRestaurant from "@/libs/getRestaurant"
@@ -11,8 +10,9 @@ import { useSearchParams } from "next/navigation";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import addReserve from "@/libs/addBooking"
+import { useSession } from "next-auth/react"
 
 
 
@@ -22,6 +22,7 @@ export default function Bookings() {
     const idParam = urlParams.get('id');
     const rid = idParam !== null ? idParam.toString() : '';
     const restaurantName = urlParams.get('name');
+    const { data: session, status } = useSession()
 
     const [restaurantResponse,setRestaurantResponse] = useState<RestaurantItem>({
         _id: '',
@@ -52,30 +53,64 @@ export default function Bookings() {
       const [surname, setSurName] = useState<string>('')
       const [id, setId] = useState<string>('')
       const [inputTable, setInputTable] = useState<string>('')
+      const [bookingId, setBookingId] = useState<string>('')
 
 
       useEffect(() => {
           const fetchData = async () => {
               const restaurName = await getRestaurant(rid);
               setRestaurantResponse(restaurName.data);
+              
           }
           fetchData();
       },[startTime,endTime,bookingDate,restaurantName]);
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const makeAppointment = (booking:BookingItem) => {
-        if(name && surname && inputTable && restaurant && startTime && endTime && id) {
-            dispatch(addBooking(booking));
+    const makeAppointment = async (booking:BookingItem) => {
+        try {
+           
+            if (name && surname && inputTable && restaurant && startTime && endTime && id) {
+              
+                dispatch(addBooking(booking));
+
+                
+                
+                if (!session || !session.user) {
+                    throw new Error('Session not available');
+                }
+
+                console.log('token', session?.user.token);
+                const reserveResponse = await addReserve(
+                    startTime?.format('YYYY-MM-DD HH:mm:ss'), 
+                    endTime?.format('YYYY-MM-DD HH:mm:ss'), 
+                    id,
+                    rid, 
+                    inputTable, 
+                    session?.user.token
+                )
+                // setBookingId(reserveResponse.data._id);
+                console.log('Reservation added successfully:', reserveResponse.data);
+                if (reserveResponse && reserveResponse.status === 'success') {
+                    setBookingId(reserveResponse.data._id);
+                    console.log('Reservation added successfully:', reserveResponse.data);
+                   
+                } else {
+                    throw new Error('Failed to add reservation');
+                }
+            } else {
+                throw new Error('Missing data for reservation');
+            }
+        } catch (error) {
+            console.error('Error making appointment:', error);
         }
     };
-    // if (bookingDate) {
-    //     bookDate: bookingDate.format('YYYY-MM-DD') // Format date as string
-    // }
+    
     const booking: BookingItem = {
         name: name,
         surname: surname,
         id: id,
+        bookId: bookingId,
         table: inputTable,
         restaurant: restaurantName ?? '',
         startBookTime: startTime?.format('YYYY-MM-DD HH:mm:ss') ?? '',
@@ -85,36 +120,39 @@ export default function Bookings() {
 
         <main className="px-auto py-5 ">
 
-            <div className="text-xl font-medium">Car: {restaurantName}</div>
-            <div className="m-20 flex flex-row flex-wrap justify-around items-center">
-               {restaurantResponse.table.map((available: Table) => {
-                const InStartTime = dayjs(startTime, 'HH:mm');
-                const InEndTime = dayjs(endTime, 'HH:mm');
-
-                const isTimeSlotAvailable = () => {
-                    return available.timeSlots.some((time: { start: string, end: string }) => {
-                        const start_Time = dayjs(time.start);
-                        const end_Time = dayjs(time.end);
-
-                        console.log("Table num: ", available.tableNumber);
-                        console.log("Start Time1:", InStartTime);
-                        console.log("Start Time2:", start_Time);
-                        console.log("compare Time2:", InEndTime.isAfter(start_Time));
-                        return ((InStartTime.isAfter(start_Time) && InStartTime.isBefore(end_Time)) || (InEndTime.isAfter(start_Time) && InEndTime.isBefore(end_Time)));
-                    });
-                };
-
-                return (
-                    isTimeSlotAvailable() ?
-                    <div className={`p-4 m-2 rounded-lg w-40 bg-red-500`}>
-                        <p className="text-white font-semibold">Table {available.tableNumber}</p>
-                        <p className="text-white">{'Not Available' }</p>
-                    </div>:<div className={`p-4 m-2 rounded-lg w-40 bg-green-500`} onClick={() => {setInputTable(available.tableNumber);}}>
-                        <p className="text-white font-semibold">Table {available.tableNumber}</p>
-                        <p className="text-white">{'Available'}</p>
-                    </div>
-                );
-            })}
+            <div className="text-xl font-medium">{restaurantName} Restaurant</div>
+            <div className="bg-[#FEFCFF] w-full h-80 m-5 rounded-lg pt-2 items-center flex flex-col justify-center">
+                <div className="bg-gray-200 w-[20%] h-8 p-1 rounded-lg">Click to choose the table</div>
+                <div className="m-10 flex flex-row flex-wrap justify-around items-center ">
+                {restaurantResponse.table.map((available: Table) => {
+                    const InStartTime = dayjs(startTime, 'HH:mm');
+                    const InEndTime = dayjs(endTime, 'HH:mm');
+                    
+                    const isTimeSlotAvailable = () => {
+                        return available.timeSlots.some((time: { start: string, end: string }) => {
+                            const start_Time = dayjs(time.start);
+                            const end_Time = dayjs(time.end);
+                            
+                            console.log("Table num: ", available.tableNumber);
+                            console.log("Start Time1:", InStartTime);
+                            console.log("Start Time2:", start_Time);
+                            console.log("compare Time2:", InEndTime.isAfter(start_Time));
+                            return ((InStartTime.isAfter(start_Time) && InStartTime.isBefore(end_Time)) || (InEndTime.isAfter(start_Time) && InEndTime.isBefore(end_Time)));
+                        });
+                    };
+                    
+                    return (
+                        isTimeSlotAvailable() ?
+                        <div className={`p-4 m-2 rounded-lg w-40 bg-red-500`}>
+                            <p className="text-white font-semibold">Table {available.tableNumber}</p>
+                            <p className="text-white">{'Not Available' }</p>
+                        </div>:<div className={`p-4 m-2 rounded-lg w-40 bg-green-500`} onClick={() => {setInputTable(available.tableNumber);}}>
+                            <p className="text-white font-semibold">Table {available.tableNumber}</p>
+                            <p className="text-white">{'Available'}</p>
+                        </div>
+                    );
+                })}
+                </div>
             </div>
             <form className="w-[100%] flex flex-col items-center space-y-5 bg-[#FEFCFF] p-5 rounded-xl">
                 <p className="text-2xl">Enter Your Information</p>

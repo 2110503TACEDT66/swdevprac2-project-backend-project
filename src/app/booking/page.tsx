@@ -44,10 +44,9 @@ export default function Bookings() {
       });
 
       
-      const [bookingDate, setBookingDate] = useState<Dayjs|null>(dayjs('2022-04-17T11:30'))
-      const [startTime, setStartTime] = useState<Dayjs|null>(dayjs('2022-04-17T11:30'))
-      const [testTime, setTestTime] = useState<Dayjs|null>(dayjs('2022-04-17T15:30'))
-      const [endTime, setEndTime] = useState<Dayjs|null>(dayjs('2022-04-17T12:20'))
+      const [bookingDate, setBookingDate] = useState<Dayjs|null>()
+      const [startTime, setStartTime] = useState<Dayjs|null>()
+      const [endTime, setEndTime] = useState<Dayjs|null>()
       const [restaurant, setRestaurant] = useState<string>('Chula')
       const [name, setName] = useState<string>('')
       const [surname, setSurName] = useState<string>('')
@@ -99,6 +98,7 @@ export default function Bookings() {
                     throw new Error('Failed to add reservation');
                 }
             } else {
+                alert('Missing data for reservation');
                 throw new Error('Missing data for reservation');
             }
         } catch (error) {
@@ -118,10 +118,10 @@ export default function Bookings() {
     };
     return (
 
-        <main className="px-auto py-5 ">
+        <main className="px-auto py-5 w-[100%]">
 
-            <div className="text-xl font-medium">{restaurantName} Restaurant</div>
-            <div className="bg-[#FEFCFF] w-full h-80 m-5 rounded-lg pt-2 items-center flex flex-col justify-center">
+            <div className="text-xl font-medium bg-gray-200 w-[30%] h-8 p-1 rounded-lg mx-auto my-5 ">{restaurantName} Restaurant</div>
+            {(startTime)?<div className="bg-[#FEFCFF] w-fit h-80 m-5 rounded-lg pt-2 items-center flex flex-col justify-center">
                 <div className="bg-gray-200 w-[20%] h-8 p-1 rounded-lg">Click to choose the table</div>
                 <div className="m-10 flex flex-row flex-wrap justify-around items-center ">
                 {restaurantResponse.table.map((available: Table) => {
@@ -153,7 +153,7 @@ export default function Bookings() {
                     );
                 })}
                 </div>
-            </div>
+            </div>:''}
             <form className="w-[100%] flex flex-col items-center space-y-5 bg-[#FEFCFF] p-5 rounded-xl">
                 <p className="text-2xl">Enter Your Information</p>
 
@@ -167,31 +167,33 @@ export default function Bookings() {
                 </div>
                
                 <div>
-                    <p className="text-2xl my-2">Enter Your Start Time</p>
+                    <p className="text-xl mt-5">Enter Your Start Time</p>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DateTimePicker']}>
-                        <DateTimePicker label="Basic date time picker" onChange={(value) => {setStartTime(value);console.log(startTime)}}/>
+                        <DateTimePicker label=" Start Time" onChange={(value) => {setStartTime(value);setInputTable('')}}/>
                     </DemoContainer>
                     </LocalizationProvider>
                 </div>
-                <div>
-                    <p className="text-2xl my-2">Start Time: {startTime?.format('HH:mm')}</p>
-                </div>
 
                 <div>
-                    <p className="text-2xl my-2">Enter Your End Time</p>
+                    <p className="text-xl mt-5">Enter Your End Time</p>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DateTimePicker']}>
-                        <DateTimePicker label="Basic date time picker" onChange={(value) => {setEndTime(value);console.log(endTime)}}/>
+                        <DateTimePicker label="End Time" onChange={(value) => {setEndTime(value);setInputTable('')}}/>
                     </DemoContainer>
                     </LocalizationProvider>
                 </div>
-                <div>
-                    <p className="text-2xl my-2">End Time: {endTime?.format('HH:mm')}</p>
+                <div className="text-md bg-gray-300 items-center rounded-lg">
+                        <div className="m-1">Table: {inputTable}</div>
+                        <div>
+                            <p className="m-1">Start Time: {startTime?.format('HH:mm')}</p>
+                        </div>
+                        <div>
+                            <p className="m-1">End Time: {endTime?.format('HH:mm')}</p>
+                        </div>
+                        
                 </div>
-                <div>table: {inputTable}</div>
-
-                <div>
+                <div className="text-md flex flex-col p-1 ">
                     <button type='button' name="Book Vaccine"
                         onClick={() => {console.log(booking); makeAppointment(booking)}}
                         className="text-gray-900 bg-white border border-gray-300 text-lg font-semibold focus:outline-none 

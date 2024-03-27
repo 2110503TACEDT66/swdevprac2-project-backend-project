@@ -107,7 +107,7 @@ export default function Edit() {
 
         <main className="px-auto py-5">
             <div className="text-xl font-medium">{restaurantName} Restaurant</div>
-            <div className="bg-[#FEFCFF] w-full h-80 m-5 rounded-lg pt-2 items-center flex flex-col justify-center">
+            <div className="h-fit bg-[#FEFCFF] w-full h-80 m-5 rounded-lg pt-2 items-center flex flex-col justify-center">
                 <div className="bg-gray-200 w-[20%] h-8 p-1 rounded-lg">Click to choose the table</div>
                 <div className="m-10 flex flex-row flex-wrap justify-around items-center ">
                 {restaurantResponse.table.map((available: Table) => {
@@ -145,31 +145,33 @@ export default function Edit() {
             <form className="flex flex-col items-center space-y-5 bg-[#FEFCFF] p-5 rounded-xl ">
                 <p className="text-2xl">Enter Your Information</p>
                 <div>
-                    <p className="text-2xl my-2">Enter Your Start Time</p>
+                    <p className="text-xl mt-5">Enter Your Start Time</p>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DateTimePicker']}>
                         <DateTimePicker label="Basic date time picker" onChange={(value) => {setStartTime(value);console.log(startTime)}}/>
                     </DemoContainer>
                     </LocalizationProvider>
                 </div>
-                <div>
-                    <p className="text-2xl my-2">Start Time: {startTime?.format('HH:mm')}</p>
-                </div>
 
                 <div>
-                    <p className="text-2xl my-2">Enter Your End Time</p>
+                    <p className="text-xl mt-5">Enter Your End Time</p>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DateTimePicker']}>
                         <DateTimePicker label="Basic date time picker" onChange={(value) => {setEndTime(value);console.log(endTime)}}/>
                     </DemoContainer>
                     </LocalizationProvider>
                 </div>
-                <div>
-                    <p className="text-2xl my-2">End Time: {endTime?.format('HH:mm')}</p>
-                </div>
-                <div>table: {inputTable}</div>
-
-                <div>
+                
+                    <div className="text-md bg-gray-300 items-center rounded-lg">
+                        <div className="m-1">Table: {inputTable}</div>
+                        <div>
+                            <p className="m-1">Start Time: {startTime?.format('HH:mm')}</p>
+                        </div>
+                        <div>
+                            <p className="m-1">End Time: {endTime?.format('HH:mm')}</p>
+                        </div>
+                        
+                    </div>
                     <button type='button' name="Book Vaccine"
                         onClick={() => { makeAppointment()}}
                         className="text-gray-900 bg-white border border-gray-300 text-lg font-semibold focus:outline-none 
@@ -177,7 +179,7 @@ export default function Edit() {
                         >
                         Update Booking
                     </button>
-                </div>
+               
             </form>
 
         </main>

@@ -7,12 +7,15 @@ import  deleteBooking  from "@/libs/deleteBooking";
 import  getAllReserves  from "@/libs/getAllReserves";
 import { useEffect,useState } from "react";
 import Link from "next/link";
+import { set } from "mongoose";
 
 
 export default function BookingList() {
     // var reserves
     const bookingItems = useAppSelector((state) => state.booking.bookItems);
     const [tmp,settmp] = useState(0)
+    const [start_Time,setStart_Time] = useState<Date>();
+    const [end_Time,setEnd_Time] = useState<Date>();
     const [reservesResponse, setReservesResponse] = useState([]);
     const { data: session } = useSession();
     if (!session || !session.user) {
@@ -63,25 +66,25 @@ export default function BookingList() {
                 reservesResponse.map((item:BookingItem2) => (
                     <div
                         key={item._id}
-                        className="text-2xl text-center text-black font-bold bg-white rounded-2xl shadow-lg m-3 w-[50%] flex flex-col gap-2 py-3"
+                        className="text-xl text-center text-black font-bold bg-white rounded-2xl shadow-lg m-3 w-[50%] flex flex-col gap-2 py-3 items-center justify-center"
                     >
                         
                     
                         <div>Restaurant: {item.restaurant.name}</div>
-                        <div>Table: {item.table}</div>
-                        <div>Start At: {item.start.toString()}</div>
-                        <div>End At: {item.end.toString()}</div>
-                        <div>id: {item._id}</div>
+                        <div className="">Table: {item.table}</div>
+                        <div>Start At: {new Date(item.start).toLocaleString()}</div>
+                        <div>End At: {new Date(item.end).toLocaleString()} </div>
+                        
                         <button
                             onClick={() => {removeBookingHandler(item._id);settmp(tmp + 1)}}
-                            className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-3"
+                            className="w-fit  bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-3"
                         >
                             Remove Booking
                         </button>
 
                         <Link href={`/booking/edit?id=${item._id}`}>
                             <button
-                                className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-3"
+                                className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-2"
                                 >
                                 Edit Booking
                             </button>

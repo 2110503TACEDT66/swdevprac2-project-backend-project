@@ -2,6 +2,7 @@ import axios from 'axios';
 const bcrypt=require('bcryptjs');
 export default async function userSignUp(userEmail:string, userName:string, userPassword?:string,  userTelephone?:string, isGoogleAccount?:boolean, role?:string) {
     console.log(userName, userEmail, userPassword)
+    const BACKEND_URL= process.env.BACKEND_URL
     try {
         if (isGoogleAccount) {
             console.log('Google is true')
@@ -12,7 +13,7 @@ export default async function userSignUp(userEmail:string, userName:string, user
             userPassword = hashedPassword;
         }
         console.log(isGoogleAccount)
-        const res = await axios.post('http://localhost:5000/api/v1/auth/register',{
+        const res = await axios.post(`${BACKEND_URL}/api/v1/auth/register`,{
                 name: userName,
                 email: userEmail,
                 password: userPassword,

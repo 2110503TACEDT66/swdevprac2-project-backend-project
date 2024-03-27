@@ -60,7 +60,7 @@ export default function BookingList() {
         <main className="flex flex-col items-center">
             {reservesResponse.length === 0 ? (
                 <div className="text-2xl text-black font-bold text-center bg-white max-w-max m-5 p-6 rounded-lg shadow-lg">
-                    No Vaccine Booking
+                    No Reservations Found
                 </div>
             ) : (
                 reservesResponse.map((item:BookingItem2) => (

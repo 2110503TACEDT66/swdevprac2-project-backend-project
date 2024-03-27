@@ -57,8 +57,12 @@ export default function Bookings() {
 
       useEffect(() => {
           const fetchData = async () => {
-              const restaurName = await getRestaurant(rid);
-              setRestaurantResponse(restaurName.data);
+            try{
+                const restaurName = await getRestaurant(rid);
+                setRestaurantResponse(restaurName.data);
+            } catch(err) {
+                console.log(err)
+            }
               
           }
           fetchData();
@@ -84,8 +88,8 @@ export default function Bookings() {
                     startTime?.format('YYYY-MM-DD HH:mm:ss'), 
                     endTime?.format('YYYY-MM-DD HH:mm:ss'), 
                     id,
-                    rid, 
-                    inputTable, 
+                    rid,
+                    inputTable,
                     session?.user.token
                 )
                 // setBookingId(reserveResponse.data._id);

@@ -28,7 +28,11 @@ export default function TopMenu() {
                 <TopMenuItem titleText='About' pageRef='/about'/>
                 <TopMenuItem titleText='Reservation' pageRef='/mybooking' />
                 <TopMenuItem titleText='Restaurant' pageRef='/restaurant' />
-                <TopMenuItem titleText='Manage' pageRef='/manage' />
+                {
+                    session?.user.role ==='admin'? 
+                    <TopMenuItem titleText='Manage' pageRef='/admin/manage' />
+                    : null
+                }
                 <TopMenuItem titleText='Home' pageRef='/' />
         </div>
     )

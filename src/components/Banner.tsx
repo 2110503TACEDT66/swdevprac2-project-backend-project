@@ -43,7 +43,6 @@ export default function Banner() {
             transition delay-75 hover:border-collapse  hover:scale-[103%]'>
                 Make your Reservation!
             </button>
-            <button className='absolute top-7' onClick={()=>console.log('eiei')}>eiei </button>
 
         </div>
     );

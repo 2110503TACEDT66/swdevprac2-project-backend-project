@@ -1,7 +1,9 @@
 
 
 export default async function addReserve(startTime:string, endTime:string , id :string , rid:string, tableNumber:string,token:string) {
-    const res = await fetch(`http://localhost:5000/api/v1/restaurants/${rid}/reserves`, {
+    const BACKEND_URL= process.env.BACKEND_URL
+
+    const res = await fetch(`${BACKEND_URL}/api/v1/restaurants/${rid}/reserves/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

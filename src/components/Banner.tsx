@@ -39,7 +39,7 @@ export default function Banner() {
 
             <button onClick={(e)=> { router.push('/restaurant'); e.stopPropagation()}}
             className='bg-white text-black border
-            font-semibold p-3 m-2 rounded-xl z-30 absolute bottom-0 right-0
+            font-semibold p-3 m-2 rounded-xl z-20 absolute bottom-0 right-0 
             transition delay-75 hover:border-collapse  hover:scale-[103%]'>
                 Make your Reservation!
             </button>

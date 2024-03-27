@@ -27,14 +27,44 @@ export default function Edit() {
       const [name, setName] = useState<string>('')
       const [surname, setSurName] = useState<string>('')
       const [id, setId] = useState<string>('')
-      const [inputTable, setInputTable] = useState<string>('')
+      
       const [bookingId, setBookingId] = useState<string>('')
       const { data: session, status } = useSession()
 
       const urlParams = useSearchParams();
       const idParam = urlParams.get('id');
+      const restaurantId = urlParams.get('rid');
+      const rid = restaurantId  !== null ? restaurantId .toString() : '';
+      const restaurantName = urlParams.get('name');
+      const tableNum = urlParams.get('table');
+      const [inputTable, setInputTable] = useState<string>(tableNum ?? '');
+      const [restaurantResponse,setRestaurantResponse] = useState<RestaurantItem>({
+        _id: '',
+        name: '',
+        address: '',
+        district: '',
+        province: '',
+        postalcode: '',
+        tel: '',
+        openingHours: {
+          dayOfWeek: '',
+          opens: '' ,
+          closes: '' 
+        },
+        table: [],
+        picture: '',
+        __v: 0,
+        id: ''
+      });
 
-
+      useEffect(() => {
+        const fetchData = async () => {
+            const restaurName = await getRestaurant(rid);
+            setRestaurantResponse(restaurName.data);
+            
+        }
+        fetchData();
+    },[startTime,endTime,bookingDate,restaurantName]);
      
 
     const dispatch = useDispatch<AppDispatch>()
@@ -52,6 +82,7 @@ export default function Edit() {
                 const reserveResponse = await updateReserve(
                     startTime?.format('YYYY-MM-DD HH:mm:ss'), 
                     endTime?.format('YYYY-MM-DD HH:mm:ss'),
+                    inputTable,
                     session.user.token,
                     idParam ?? ''
                 )
@@ -74,7 +105,41 @@ export default function Edit() {
     
     return (
 
-        <main className="px-auto py-5 w-full">
+        <main className="px-auto py-5">
+            <div className="text-xl font-medium">{restaurantName} Restaurant</div>
+            <div className="bg-[#FEFCFF] w-full h-80 m-5 rounded-lg pt-2 items-center flex flex-col justify-center">
+                <div className="bg-gray-200 w-[20%] h-8 p-1 rounded-lg">Click to choose the table</div>
+                <div className="m-10 flex flex-row flex-wrap justify-around items-center ">
+                {restaurantResponse.table.map((available: Table) => {
+                    const InStartTime = dayjs(startTime, 'HH:mm');
+                    const InEndTime = dayjs(endTime, 'HH:mm');
+                    
+                    const isTimeSlotAvailable = () => {
+                        return available.timeSlots.some((time: { start: string, end: string }) => {
+                            const start_Time = dayjs(time.start);
+                            const end_Time = dayjs(time.end);
+                            
+                            console.log("Table num: ", available.tableNumber);
+                            console.log("Start Time1:", InStartTime);
+                            console.log("Start Time2:", start_Time);
+                            console.log("compare Time2:", InEndTime.isAfter(start_Time));
+                            return ((InStartTime.isAfter(start_Time) && InStartTime.isBefore(end_Time)) || (InEndTime.isAfter(start_Time) && InEndTime.isBefore(end_Time)));
+                        });
+                    };
+                    
+                    return (
+                        isTimeSlotAvailable() ?
+                        <div className={`p-4 m-2 rounded-lg w-40 bg-red-500`}>
+                            <p className="text-white font-semibold">Table {available.tableNumber}</p>
+                            <p className="text-white">{'Not Available' }</p>
+                        </div>:<div className={`p-4 m-2 rounded-lg w-40 bg-green-500`} onClick={() => {setInputTable(available.tableNumber);}}>
+                            <p className="text-white font-semibold">Table {available.tableNumber}</p>
+                            <p className="text-white">{'Available'}</p>
+                        </div>
+                    );
+                })}
+                </div>
+            </div>
 
             
             <form className="flex flex-col items-center space-y-5 bg-[#FEFCFF] p-5 rounded-xl ">

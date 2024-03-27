@@ -82,7 +82,7 @@ export default function BookingList() {
                             Remove Booking
                         </button>
 
-                        <Link href={`/booking/edit?id=${item._id}`}>
+                        <Link href={`/booking/edit?id=${item._id}&rid=${item.restaurant.id}&name=${item.restaurant.name}&table=${item.table}`}>
                             <button
                                 className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-2"
                                 >

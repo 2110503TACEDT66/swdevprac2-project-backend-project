@@ -1,6 +1,7 @@
 export default async function updateReserve(
     startTime: string,
     endTime: string,
+    table: string,
     token: string,
     id: string
   ) {
@@ -15,6 +16,7 @@ export default async function updateReserve(
         body: JSON.stringify({
           start: startTime,
           end: endTime,
+          table: table
         })
       }
     );

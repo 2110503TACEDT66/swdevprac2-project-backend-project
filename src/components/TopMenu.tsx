@@ -26,7 +26,7 @@ export default function TopMenu() {
                     }
 
                 <TopMenuItem titleText='About' pageRef='/about'/>
-                <TopMenuItem titleText='Reservation' pageRef='/booking' />
+                <TopMenuItem titleText='Reservation' pageRef='/mybooking' />
                 <TopMenuItem titleText='Restaurant' pageRef='/restaurant' />
                 <TopMenuItem titleText='Manage' pageRef='/manage' />
                 <TopMenuItem titleText='Home' pageRef='/' />

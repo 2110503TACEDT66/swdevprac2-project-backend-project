@@ -1,8 +1,14 @@
+import User from "@/db/models/User"
 import NextAuth from "next-auth/next";
-import { AuthOptions } from "next-auth";
+import { Account, AuthOptions, User as nextUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import userLogin from "@/libs/userLogIn";
 import GoogleProvider from "next-auth/providers/google";
+import { AdapterUser } from "next-auth/adapters";
+import axios from "axios";
+import userSignUp from "@/libs/userSignUp";
+import { dbconnect } from "@/db/dbConnect";
+import mongoose from "mongoose";
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -17,7 +23,6 @@ export const authOptions: AuthOptions = {
             credentials: {
               email: { label: "Email", type: "email", placeholder: "email" },
               password: { label: "Password", type: "password", placeholder:"password" }
-              
             },
             async authorize(credentials, req) {
               if(!credentials){ return null }
@@ -36,23 +41,66 @@ export const authOptions: AuthOptions = {
           }),
           GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            profile(profile, tokens) {return({
+                id: profile.sub,
+                name: `${profile.given_name}`,
+                email: profile.email,
+                role: profile.role? profile.role:'user'
+            })},
           })
           
     ],
-    pages: {
-      signIn: "/auth/login"
-    },
+    
     session: {strategy:'jwt'},
     callbacks: {
+        async signIn({user, account}:{user: nextUser | AdapterUser, account: Account|null}) {
+          // const {name, email, password, tel} = user
+          console.log("user: ")
+          console.log("user: " + user?.email)
+          // console.log("account: " + {...account})
+          if(account?.provider === 'google') {
+            try {
+              await dbconnect()
+              const db = mongoose.connection.db;
+              const usersCollection = db.collection('users');
+
+              const existingUser = await usersCollection.findOne({ email: user.email });
+              
+              if (!existingUser) {
+                console.log('yay')
+                const res = await userSignUp(user.email as string, user.name as string, undefined, undefined, true, 'user')
+                console.log(res)
+              } else if(existingUser) {
+                console.log('eiei ii:',existingUser)  
+              }
+            } catch (error) {
+              console.error('Error saving user to MongoDB:', error);
+            }
+            return true
+          }
+    
+          return true;
+        },
         async jwt({token, user}) {
-            return {...token, ...user}
+            console.log('JWT Payload:', token);
+            console.log('User:', user);
+            // if (user &&('role' in user)) {
+            //   return {
+            //       ...token,
+            //       ...user,
+            //       role: user.role // Include the role property in the JWT payload
+            //   };
+            // }
+          return {...token, ...user};
         },
         async session({session, token, user}) {
-            session.user = token as any
-
+            session.user.role = token.role
             return session
-        }
+        },
+        async redirect({ url, baseUrl }) {
+          return baseUrl + "/"; 
+        },
     }
 }
 

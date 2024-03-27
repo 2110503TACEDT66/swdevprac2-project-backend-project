@@ -6,6 +6,12 @@ const RestaurantSchema = new mongoose.Schema({
         trim:true,
         maxlength:[50,'Name can not be more than 50 characters']
     },
+    picture: {
+        type: String,
+        required: [true,'Please add a picture'],
+        unique: true,
+        trim:true,
+    },
     address:{
         type: String,
         required: [true,'Please add an address']
@@ -30,22 +36,8 @@ const RestaurantSchema = new mongoose.Schema({
     region:{
         type: String,
         required: [true,'Please add region'],
-    },
-    openingHours: [ {
-            type: Map,
-            enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            of: {
-                opens: { type: String, required: true },
-                closes: { type: String, required: true }
-            }
-        
     }
-    ],
-    table: [{
-        type: String,
-        require: true
-    }]
 });
 
-const Restaurant = mongoose.model('Restaurant', RestaurantSchema) || mongoose.model.Restaurant;
+const Restaurant = mongoose.model('Restaurant', RestaurantSchema)
 export default Restaurant;

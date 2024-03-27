@@ -48,3 +48,11 @@ interface table{
     end: string
   }
 }
+
+interface user{
+  name: string,
+  email: string,
+  role: string,
+  tel: string,
+  password: string
+}

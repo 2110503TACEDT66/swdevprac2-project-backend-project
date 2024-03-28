@@ -11,6 +11,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import addReserve from "@/libs/addBooking"
 import { useSession } from "next-auth/react"
 import toast, { Toaster } from 'react-hot-toast'
+import getAllReserves from "@/libs/getAllReserves"
 
 
 
@@ -20,6 +21,9 @@ export default function Bookings() {
     const rid = idParam !== null ? idParam.toString() : '';
     const restaurantName = urlParams.get('name');
     const { data: session, status } = useSession()
+    if (!session || !session.user) {
+        throw new Error('Session not available');
+    }
 
     const [restaurantResponse,setRestaurantResponse] = useState<RestaurantItem>({
         _id: '',
@@ -50,13 +54,16 @@ export default function Bookings() {
       const [id, setId] = useState<string>('')
       const [inputTable, setInputTable] = useState<string>('')
       const [bookingId, setBookingId] = useState<string>('')
+      const [reserveNum, setReserveNum] = useState<number>(0)
 
 
       useEffect(() => {
           const fetchData = async () => {
             try{
                 const restaurName = await getRestaurant(rid);
+                const reserve = await getAllReserves(session?.user.token);
                 setRestaurantResponse(restaurName.data);
+                setReserveNum(reserve.count);
             } catch(err) {
                 console.log(err)
             }
@@ -71,10 +78,12 @@ export default function Bookings() {
         try {
            
             if (name && surname && inputTable && restaurant && startTime && endTime && id) {
-                if (!session || !session.user) {
-                    throw new Error('Session not available');
+                
+                if(!(endTime.isBefore(startTime))){
+                if(reserveNum + 1 >3 && session?.user.role !== 'admin'){
+                    toast.error('You can only reserve 3 times')
+                    return;
                 }
-
                 console.log('token', session?.user.token);
                 const reserveResponse = await addReserve(
                     startTime?.format('YYYY-MM-DD HH:mm:ss'), 
@@ -84,15 +93,22 @@ export default function Bookings() {
                     inputTable,
                     session?.user.token
                 )
+
+                
                 // setBookingId(reserveResponse.data._id);
-                console.log('Reservation added successfully:', reserveResponse.data);
-                if (reserveResponse && reserveResponse.status === 'success') {
+                    console.log('Reservation added successfully:', reserveResponse.success);
+                if (reserveResponse && reserveResponse.success) {
                     setBookingId(reserveResponse.data._id);
                     console.log('Reservation added successfully:', reserveResponse.data);
-                    toast.success('Reserve Successfully🥳')
+                    toast.success('Reserve Successfully🥳');
+                    window.location.reload();
                 } else {
-                    toast.error('Failed to add reservation')
+                    //toast.error('Failed to add reservation')
                     throw new Error('Failed to add reservation');
+                }
+                }else{
+                    toast.error('Please add a valid time slot')
+                    
                 }
             } else {
                 toast.error('Missing reservation data')
@@ -100,7 +116,7 @@ export default function Bookings() {
                 throw new Error('Missing data for reservation');
             }
         } catch (error) {
-            toast.error('You already have made 3 reservations')
+           
             console.error('Error making appointment:', error);
         }
     };
@@ -145,7 +161,8 @@ export default function Bookings() {
                             console.log("Start Time1:", InStartTime);
                             console.log("Start Time2:", start_Time);
                             console.log("compare Time2:", InEndTime.isAfter(start_Time));
-                            return ((InStartTime.isAfter(start_Time) && InStartTime.isBefore(end_Time)) || (InEndTime.isAfter(start_Time) && InEndTime.isBefore(end_Time)));
+                            return ((InStartTime.isAfter(start_Time) && InStartTime.isBefore(end_Time)) || (InEndTime.isAfter(start_Time) && InEndTime.isBefore(end_Time))
+                            ||  (InStartTime.isSame(start_Time) || InEndTime.isSame(end_Time)));
                         });
                     };
                     
@@ -164,6 +181,7 @@ export default function Bookings() {
                 </div>
             </div>:''}
             <form className="w-[100%] flex flex-col items-center space-y-5 bg-[#FEFCFF] p-5 rounded-xl shadow-md">
+                <div>Total Reserves : {reserveNum}</div>
                 <p className="text-xl font-medium m-4 bg-[#F5F5F5] p-5 rounded-3xl shadow-md">Enter Your Information</p>
 
                 <div className="flex text-black flex-col justify-center items-center w-[70%] gap-6">

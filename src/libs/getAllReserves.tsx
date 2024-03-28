@@ -1,6 +1,6 @@
 export default async function getAllReserves(token:string) {
 
-    const res = await fetch(`http://localhost:5001/api/v1/reserves`, {
+    const res = await fetch(`https://presentation-day-1-backend-project-one.vercel.app/api/v1/reserves`, {
         method: 'GET',
         headers: {
             authorization: `Bearer ${token}`

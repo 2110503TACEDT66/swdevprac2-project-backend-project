@@ -3,7 +3,7 @@
 export default async function addReserve(startTime:string, endTime:string , id :string , rid:string, tableNumber:string,token:string) {
 
 
-    const res = await fetch(`http://localhost:5001/api/v1/restaurants/${rid}/reserves/`, {
+    const res = await fetch(`https://presentation-day-1-backend-project-one.vercel.app/api/v1/restaurants/${rid}/reserves/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

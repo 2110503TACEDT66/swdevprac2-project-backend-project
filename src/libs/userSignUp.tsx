@@ -11,7 +11,7 @@ export default async function userSignUp(userEmail:string, userName:string, user
             userPassword = hashedPassword;
         }
         console.log(isGoogleAccount)
-        const res = await axios.post(`http://localhost:5001/api/v1/auth/register`,{
+        const res = await axios.post(`https://presentation-day-1-backend-project-one.vercel.app/api/v1/auth/register`,{
                 name: userName,
                 email: userEmail,
                 password: userPassword,

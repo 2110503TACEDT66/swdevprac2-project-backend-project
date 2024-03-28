@@ -1,7 +1,7 @@
 
 
 export default async function deleteBooking(token:string,id:string) {
-    const res = await fetch(`http://localhost:5001/api/v1/reserves/${id}`, {
+    const res = await fetch(`https://presentation-day-1-backend-project-one.vercel.app/api/v1/reserves/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

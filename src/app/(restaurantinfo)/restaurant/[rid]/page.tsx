@@ -44,7 +44,7 @@ export default function RestaurantDetailPage({params} : {params: {rid:string}}) 
         <main className="text-center p-5">
             {/* <h1 className="text-lg font-medium"> {params.hid} </h1> */}
                 <div className="flex my-5 justify-center bg-white py-8 rounded-2xl shadow-lg">
-                    <img src={ (restaurant).picture} alt='Restaurant Image' 
+                    <Image src={ (restaurant).picture} alt='Restaurant Image' 
                     width={0} height={0} sizes="100vw"
                     className="rounded-lg w-[30%]"/>
                     <div className="text-left flex justify-center bg-[#F5F5F5] rounded-lg p-5 items-center m-10 shadow-lg">

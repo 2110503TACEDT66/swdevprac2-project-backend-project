@@ -1,49 +1,55 @@
 'use client'
 import { useSession } from "next-auth/react";
-import { useDispatch } from "react-redux";
-import { removeBooking } from "@/redux/features/bookSlice";
-import { useAppSelector } from "@/redux/store";
 import  deleteBooking  from "@/libs/deleteBooking";
 import  getAllReserves  from "@/libs/getAllReserves";
 import { useEffect,useState } from "react";
 import Link from "next/link";
-import { set } from "mongoose";
+import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import { LinearProgress } from "@mui/material";
+import { revalidateTag } from "next/cache";
+import getUserProfile from "@/libs/getUserProfile";
+
 
 
 export default function BookingList() {
+    const router = useRouter()
     // var reserves
-    const bookingItems = useAppSelector((state) => state.booking.bookItems);
+    // const bookingItems = useAppSelector((state) => state.booking.bookItems);
     const [tmp,settmp] = useState(0)
     const [start_Time,setStart_Time] = useState<Date>();
     const [end_Time,setEnd_Time] = useState<Date>();
     const [reservesResponse, setReservesResponse] = useState([]);
     const { data: session } = useSession();
+    const [userArray, setUserArray] = useState([''])
     if (!session || !session.user) {
-        throw new Error('Session not available');
+        router.replace('/')
+        return null
     }
     useEffect(() => {
         const fetchData = async () => {
             try {
-        
                 const reserves = await getAllReserves(session.user.token);
+                // const user = await getUserProfile(reserves)
                 setReservesResponse(reserves.data);
-                console.log(reserves.data)
-              } catch (e) { 
-                return console.error("Cannot Fetch Reserves")
-              }
+                // reservesResponse.map(async (item:BookingItem2)=> {
+                //     let res = await getUserProfile(item._id)
+                //     console.log(res.name, "yoyo")
+                //     let tempArray: string[] = [...userArray]
+                //     tempArray.push(res.name)
+                //     setUserArray(tempArray)
+                // })
+                console.log(reserves.data, "eiei");
+            } catch (error) {
+                console.error("Cannot Fetch Reserves:", error);
+                return []; // Return an empty array as a fallback value
+            }
         };
         fetchData();
     }, [tmp]);
-   
-    
-
-    // Get the session data
-   
 
     // Function to handle booking removal
     const removeBookingHandler = (id: string) => {
-        
-        
         // Call function to delete booking from the database
         deleteBooking(session?.user.token, id)
             .then(() => {
@@ -57,41 +63,48 @@ export default function BookingList() {
     };
 
     return (
-        <main className="flex flex-col items-center">
-            {reservesResponse.length === 0 ? (
-                <div className="text-2xl text-black font-bold text-center bg-white max-w-max m-5 p-6 rounded-lg shadow-lg">
-                    No Reservations Found
-                </div>
-            ) : (
-                reservesResponse.map((item:BookingItem2) => (
-                    <div
-                        key={item._id}
-                        className="text-xl text-center text-black font-bold bg-white rounded-2xl shadow-lg m-3 w-[50%] flex flex-col gap-2 py-3 items-center justify-center"
-                    >
-                        
-                    
-                        <div>Restaurant: {item.restaurant.name}</div>
-                        <div className="">Table: {item.table}</div>
-                        <div>Start At: {new Date(item.start).toLocaleString()}</div>
-                        <div>End At: {new Date(item.end).toLocaleString()} </div>
-                        
-                        <button
-                            onClick={() => {removeBookingHandler(item._id);settmp(tmp + 1)}}
-                            className="w-fit  bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-3"
-                        >
-                            Remove Booking
-                        </button>
+        
+        <Suspense fallback= {
+            <p className="text-black text-xl text-center p-5">Loading ... <LinearProgress/></p>
+          }>
 
-                        <Link href={`/booking/edit?id=${item._id}&rid=${item.restaurant.id}&name=${item.restaurant.name}&table=${item.table}`}>
-                            <button
-                                className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-2"
-                                >
-                                Edit Booking
-                            </button>
-                        </Link>
+            <main className="flex flex-col items-center">
+                {reservesResponse.length === 0 ? (
+                    <div className="text-2xl text-black font-bold text-center bg-white max-w-max m-5 p-6 rounded-lg shadow-lg">
+                        No Reservations Found
                     </div>
-                ))
-            )}
-        </main>
+                ) : (
+                    reservesResponse.map((item:BookingItem2) => (
+                        <div
+                            key={item._id}
+                            className="text-xl text-center text-black font-bold bg-white 
+                            rounded-2xl shadow-lg m-3 w-[50%] 
+                            flex flex-col gap-2 py-3 items-center justify-center"
+                        >
+                            <div>Restaurant: {item.restaurant.name}</div>
+                            <div className="">Name: {item.userName}</div> 
+                            <div className="">Table: {item.table}</div>
+                            <div>Start At: {new Date(item.start).toLocaleString()}</div>
+                            <div>End At: {new Date(item.end).toLocaleString()} </div>
+                            
+                            <button
+                                onClick={() => {removeBookingHandler(item._id);settmp(tmp + 1)}}
+                                className="w-fit  bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-3"
+                            >
+                                Remove Reservation
+                            </button>
+
+                            <Link href={`/booking/edit?id=${item._id}&rid=${item.restaurant.id}&name=${item.restaurant.name}&table=${item.table}`}>
+                                <button
+                                    className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-2"
+                                    >
+                                    Edit Reservation
+                                </button>
+                            </Link>
+                        </div>
+                    ))
+                )}
+            </main>
+        </Suspense>
     );
 }

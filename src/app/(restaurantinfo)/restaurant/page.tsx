@@ -15,7 +15,7 @@ export default function Restaurant() {
           <p className="text-black text-xl text-center p-5">Loading ... <LinearProgress/></p>
         }>
         <div>
-            <h1 className="text-black p-5 text-center font-semibold text-2xl">
+            <h1 className="text-black py-6 my-6 text-center font-semibold text-2xl">
                 Restaurant Information
             </h1>
         </div>

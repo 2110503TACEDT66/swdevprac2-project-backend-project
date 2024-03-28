@@ -6,10 +6,10 @@ export default function MyBookingLayout(
 
 ) {
     return (
-        <ReduxProvider>
+        // <ReduxProvider>
             <div>
                 {children}
             </div>
-        </ReduxProvider>
+        // </ReduxProvider>
     )
 }

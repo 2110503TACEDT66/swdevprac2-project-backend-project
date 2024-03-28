@@ -9,6 +9,7 @@ import axios from "axios";
 import userSignUp from "@/libs/userSignUp";
 import { dbconnect } from "@/db/dbConnect";
 import mongoose from "mongoose";
+import toast from "react-hot-toast";
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -72,6 +73,7 @@ export const authOptions: AuthOptions = {
                 const res = await userSignUp(user.email as string, user.name as string, undefined, undefined, true, 'user')
                 console.log(res)
               } else if(existingUser) {
+                // const user = await userLogin(credentials.email, credentials.password)
                 console.log('eiei ii:',existingUser)  
               }
             } catch (error) {
@@ -83,8 +85,8 @@ export const authOptions: AuthOptions = {
           return true;
         },
         async jwt({token, user}) {
-            console.log('JWT Payload:', token);
-            console.log('User:', user);
+            // console.log('JWT Payload:', token);
+            // console.log('User:', user);
             // if (user &&('role' in user)) {
             //   return {
             //       ...token,

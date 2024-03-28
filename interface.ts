@@ -40,6 +40,7 @@ interface BookingItem2 {
   start: string,
   end: string,
   user: string,
+  userName: string,
   restaurant: RestaurantItem,
   table: string,
   createAt: string

@@ -6,6 +6,7 @@ import { Redirect } from "next";
 import Link from "next/link";
 import Image from 'next/image';
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 
 
 export default function SignUp() {
@@ -20,10 +21,6 @@ export default function SignUp() {
     
 
     const handleSubmit = async (e:any) => {
-        // e.preventDefault(); 
-        console.log('hahaha');
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // setIsEmailValid(emailRegex.test(e.target.value)); 
         try {
             const res = await userSignUp(userEmail, userName, userPassword,  userTelephone, false);
             console.log('eiei');
@@ -31,8 +28,10 @@ export default function SignUp() {
             setUserPassword('')
             setUserName('')
             setUserTelephone('')
+            toast.success('Sign Up Successfully🥳')
             router.push('/api/auth/signin')
         } catch (err) {
+            toast.error('Registration failed')
             console.log('Registration failed');
         }
     }
@@ -41,29 +40,35 @@ export default function SignUp() {
     return (
         <main className="h-[100vh]">
             <div className="flex items-center justify-center my-24 z-10">
-            <form action={handleSubmit} className="flex flex-col bg-white rounded-xl shadow-lg justify-center items-center gap-5 text-xl py-8 w-[60vw]">
+            <form action={handleSubmit} className="flex flex-col bg-white rounded-xl shadow-lg justify-center items-center gap-5 text-xl py-8 w-[55vw]">
                     <p className="text-3xl font-semibold">Register</p>
-                <div className="p-6 flex flex-col gap-4">
+                <div className="p-6 flex flex-col gap-5">
                     <div className="">
                         <label htmlFor="name" >Name: </label>
                         <input type="text" placeholder="Name" name='name' required max={50} value={userName}
                         onChange={(e)=>{setUserName(e.target.value); console.log('ieei');}}
-                        className="border-[#8B2A33]"/>
+                        className="border-black/15 border-2 rounded-lg px-2 py-1"/>
                     </div>
+                    <hr></hr>
                     <div className="">
                         <label htmlFor="email" >Email: </label>
                         <input type="text" placeholder="Email" name='email' required value={userEmail}
+                        className="border-black/15 border-2 rounded-lg px-2 py-1"
                         onChange={(e)=>setUserEmail(e.target.value)}/>
                         
                     </div>
+                    <hr></hr>
                     <div className="">
                         <label htmlFor="password" >Password: </label>
                         <input type="password" placeholder="Password" name='password' required min={6} value={userPassword}
+                        className="border-black/15 border-2 rounded-lg px-2 py-1"
                         onChange={(e)=>setUserPassword(e.target.value)}/>
                     </div>
+                    <hr></hr>
                     <div className="">
                         <label htmlFor="tel" >Tel: </label>
                         <input type="text" placeholder="Tel." name='tel' required value={userTelephone} 
+                        className="border-black/15 border-2 rounded-lg px-2 py-1"
                         onChange={(e)=>setUserTelephone(e.target.value)}/>
                     </div>
                 </div>

@@ -6,10 +6,10 @@ export default function BookingLayout(
 
 ) {
     return (
-        <ReduxProvider>
+        // <ReduxProvider>
             <div className='flex p-2.5 text-black text-center gap-20'>
                 {children}
             </div>
-        </ReduxProvider>
+        // </ReduxProvider>
     )
 }

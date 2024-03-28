@@ -4,7 +4,7 @@ export default function MyBooking() {
     return (
         // <Provider store={store}>
             <div>
-                <BookingList></BookingList>
+                <BookingList />
             </div>
         // </Provider>
 

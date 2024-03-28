@@ -5,10 +5,8 @@ export default async function updateReserve(
     token: string,
     id: string
   ) {
-    const BACKEND_URL= process.env.BACKEND_URL
-
     const res = await fetch(
-      `${BACKEND_URL}/api/v1/reserves/${id}`,
+      `http://localhost:5001/api/v1/reserves/${id}`,
       {
         method: 'PUT',
         headers: {

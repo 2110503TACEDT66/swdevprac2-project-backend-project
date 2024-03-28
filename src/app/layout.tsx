@@ -5,6 +5,7 @@ import TopMenu from '@/components/TopMenu'
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import NextAuthProvider from '@/providers/NextAuthProvider';
+import toast, { Toaster } from 'react-hot-toast'
 
 
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className='font-sans '>
           <NextAuthProvider session={session}>
+            <Toaster/>
             <TopMenu/>
             {children}
           </NextAuthProvider>

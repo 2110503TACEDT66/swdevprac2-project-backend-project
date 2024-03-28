@@ -21,14 +21,14 @@ export default function Home() {
         <div>
           <h1 className="mt-10 text-2xl text-center font-bold text-gray-800">More Than 50++ Tops Restaurant </h1>
         </div>
-        <div className='m-10 flex flex-wrap justify-center'>
+        <div className=' flex flex-wrap justify-center gap-4 m-4'>
           
             <Image
               src={`/img/sample1.png`}
               alt='cover'
               width={100}
               height={20}
-              className='mx-10'
+              className='mx-10 w-auto h-auto'
               />
           
           
@@ -37,7 +37,7 @@ export default function Home() {
               alt='cover'
               width={100}
               height={20}
-              className='mx-10'
+              className='mx-10 w-auto h-auto'
               />
         
             <Image
@@ -45,21 +45,21 @@ export default function Home() {
               alt='cover'
               width={100}
               height={20}
-              className='mx-10'
+              className='mx-10 w-auto h-auto'
               />
             <Image
               src={`/img/sample1.png`}
               alt='cover'
               width={100}
               height={20}
-              className='mx-10'
+              className='mx-10 w-auto h-auto'
               />
             <Image
               src={`/img/sample2.png`}
               alt='cover'
               width={100}
               height={20}
-              className='mx-10 '
+              className='mx-10 w-auto h-auto'
               />
         </div>
         <div className='w-full bg-gray-100 flex'>
@@ -68,8 +68,8 @@ export default function Home() {
               <div className='font-semibold m-auto text-2xl text-red-800'>Reserve your table</div>
               <div className='font-semibold m-auto text-2xl mb-4 text-red-800'>While seats last</div>
 
-              <button onClick={(e)=> { router.push('/restaurant'); e.stopPropagation()}} className='text-white bg-white border bg-red-800 text-lg font-semibold focus:outline-none 
-                        hoverbg-red-900 rounded-lg px-5 py-2.5 me-2 mb-2 hover:scale-105 my-5'>Reserve Now!</button>
+              <button onClick={(e)=> { router.push('/restaurant'); e.stopPropagation()}} className='text-white border bg-red-800 text-lg font-semibold focus:outline-none 
+                        hover:bg-red-900 rounded-lg px-5 py-2.5 me-2 mb-2 hover:scale-105 my-5'>Reserve Now!</button>
             </div>
             <Image
               src={`/img/side.png`}

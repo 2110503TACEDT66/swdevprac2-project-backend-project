@@ -1,18 +1,15 @@
-export default async function getAllResreve(token:string) {
-    const BACKEND_URL= process.env.BACKEND_URL
+export default async function getAllReserves(token:string) {
 
-
-    const res = await fetch(`${BACKEND_URL}/api/v1/reserves`, {
+    const res = await fetch(`http://localhost:5001/api/v1/reserves`, {
         method: 'GET',
         headers: {
             authorization: `Bearer ${token}`
         }
     })
-
     if(!res.ok) {
         throw new Error('Cannot get reserves')
     }
-
+    // console.log(BACKEND_URL);
     return await res.json()
 
 }

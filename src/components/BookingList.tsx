@@ -56,7 +56,7 @@ export default function BookingList() {
             });
     };
     if(isLoading) {
-        <LinearProgress/>
+        return <LinearProgress/>
     }
 
     return (
@@ -64,7 +64,7 @@ export default function BookingList() {
             {reservesResponse.length === 0 ? (
                 <div className="text-2xl text-black font-bold text-center bg-white max-w-max m-5 p-6 rounded-lg shadow-lg">
                     No Reservations Found
-                    <LinearProgress/>
+                    {/* <LinearProgress/> */}
                 </div>
             ) : (
                 reservesResponse.map((item:BookingItem2) => (

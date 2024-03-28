@@ -1,15 +1,21 @@
-export default async function getRestaurants() {
+import { BACKEND_URL } from "@/config"
 
-        await new Promise((resolve) => {
-            setTimeout(resolve, 1000)
-        })
+export default async function getRestaurants() {
     
-        const response = await fetch(`https://presentation-day-1-backend-project-one.vercel.app/api/v1/restaurants`)
-    
-        if(!response.ok) {
-            throw new Error('Failed to fetch restaurants')
+    try {
+
+        const response = await fetch(`${BACKEND_URL}/api/v1/restaurants`);
+        
+        // Check if response is okay
+        if (!response.ok) {
+            throw new Error('Failed to fetch restaurants');
         }
-    
-        return response.json()
+        
+        // Return JSON data
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 
 }

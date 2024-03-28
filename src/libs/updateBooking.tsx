@@ -1,3 +1,5 @@
+import { BACKEND_URL } from "@/config";
+
 export default async function updateReserve(
     startTime: string,
     endTime: string,
@@ -5,25 +7,34 @@ export default async function updateReserve(
     token: string,
     id: string
   ) {
-    const res = await fetch(
-      `https://presentation-day-1-backend-project-one.vercel.app/api/v1/reserves/${id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          start: startTime,
-          end: endTime,
-          table: table
-        })
+    try {
+      const res = await fetch(
+        `${BACKEND_URL}/api/v1/reserves/${id}`,
+        {
+          method: 'PUT',
+          mode:'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`,
+            mode:'cors'
+
+          },
+          body: JSON.stringify({
+            start: startTime,
+            end: endTime,
+            table: table
+          })
+        }
+      );
+    
+      if (!res.ok) {
+        throw new Error('Failed to update reservation');
       }
-    );
-  
-    if (!res.ok) {
-      throw new Error('Failed to update reservation');
+    
+      return await res.json();
+
+    } catch(error) {
+      console.error(error);
+      throw error;
     }
-  
-    return await res.json();
   }

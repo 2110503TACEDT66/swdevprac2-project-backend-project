@@ -3,7 +3,7 @@ import { BACKEND_URL } from "@/config"
 export default async function addReserve(startTime:string, endTime:string , id :string , rid:string, tableNumber:string,token:string) {
 
     try {
-        const res = await fetch(`${BACKEND_URL}/${rid}/reserves/`, {
+        const res = await fetch(`${BACKEND_URL}/api/v1/restaurants/${rid}/reserves/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

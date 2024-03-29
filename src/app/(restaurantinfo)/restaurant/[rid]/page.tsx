@@ -41,14 +41,15 @@ export default function RestaurantDetailPage({params} : {params: {rid:string}}) 
     //     console.log(err)
     // }
     return (
-        <main className="text-center p-5">
+        <main className="text-center p-5 flex justify-center">
             {/* <h1 className="text-lg font-medium"> {params.hid} </h1> */}
-                <div className="flex my-5 justify-center bg-white py-8 rounded-2xl shadow-lg">
+                <div className="flex my-5 justify-center bg-white p-8 rounded-2xl shadow-lg ">
                     <Image src={ (restaurant).picture} alt='Restaurant Image' 
                     width={0} height={0} sizes="100vw"
-                    className="rounded-lg w-[30%]"/>
-                    <div className="text-left flex justify-center bg-[#F5F5F5] rounded-lg p-5 items-center m-10 shadow-lg">
-                        <div className="flex flex-col gap-2 items-center justify-center">
+                    objectFit="cover"
+                    className="rounded-lg w-[30%] min-w-48 h-auto"/>
+                    <div className="text-left flex justify-center bg-[#F5F5F5] rounded-lg p-5 items-center m-10 shadow-lg ">
+                        <div className="flex flex-col gap-4 items-center justify-center ">
                             <div className="text-2xl text-black mx-5 text-center">
                                 {((restaurant).name)}
                             </div>
@@ -58,24 +59,30 @@ export default function RestaurantDetailPage({params} : {params: {rid:string}}) 
                             <div className="text-xl text-black mx-5">
                                 Tel. : {((restaurant).tel)}
                             </div>
-                            {session?.data?.user ? (
-                            <Link href={`/booking?id=${params.rid}&name=${(restaurant).name}`}>
-                                <button className="block rounded-md hover:bg-[#d84d5b] transition duration-100
-                                hover:scale-105 bg-[#b9424e] px-5 py-3 text-white shadow-lg m-auto"
-                                onClick={()=>toast.success('pls login first')}>
+                            <div className="flex flex-col gap-4 m-4">
+                                {session?.data?.user ? (
+                                <Link href={`/booking?id=${params.rid}&name=${(restaurant).name}`}>
+                                    <button className="block rounded-md hover:bg-[#d84d5b] transition duration-100
+                                    hover:scale-105 bg-[#b9424e] px-5 py-3 text-white shadow-lg m-auto"
+                                    onClick={()=>toast.success('pls login first')}>
+                                        Make Reservation
+                                    </button>
+                                </Link>
+                                    ) : (
+                                <button className="block rounded-md bg-gray-400 px-5 py-3 text-white shadow-lg m-auto"
+                                onClick={()=>toast.error('pls login first')}>
                                     Make Reservations
                                 </button>
-                            </Link>
-                                ) : (
-                            <button className="block rounded-md bg-gray-400 px-5 py-3 text-white shadow-lg m-auto"
-                            onClick={()=>toast.error('pls login first')}>
-                                Make Reservations
-                            </button>
-                            )}
+                                )}
+                                <Link href={'/restaurant'} className="block rounded-md hover:bg-[#d84d5b] transition duration-100
+                                    hover:scale-105 bg-[#b9424e] px-5 py-3 text-white shadow-lg m-auto"
+                                >
+                                ← Back to Restaurant
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
-            
         </main>
     )
 }

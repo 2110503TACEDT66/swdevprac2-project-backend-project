@@ -86,8 +86,8 @@ export default function Bookings() {
                 }
                 console.log('token', session?.user.token);
                 const reserveResponse = await addReserve(
-                    startTime?.format('YYYY-MM-DD HH:mm:ss'), 
-                    endTime?.format('YYYY-MM-DD HH:mm:ss'), 
+                    startTime?.format('YYYY-MM-DD HH:mm:ss'),
+                    endTime?.format('YYYY-MM-DD HH:mm:ss'),
                     id,
                     rid,
                     inputTable,

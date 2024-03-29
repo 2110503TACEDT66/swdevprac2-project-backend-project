@@ -31,7 +31,6 @@ export default function BookingList() {
             try {
                 const reserves = await getAllReserves(session.user.token);
                 setReservesResponse(reserves.data);
-                // setIsLoading(false)
                 console.log(reserves.data, "eiei");
             } catch (error) {
                 console.error("Cannot Fetch Reserves:", error);
@@ -64,7 +63,6 @@ export default function BookingList() {
             {reservesResponse.length === 0 ? (
                 <div className="text-2xl text-black font-bold text-center bg-white max-w-max m-5 p-6 rounded-lg shadow-lg">
                     No Reservations Found
-                    {/* <LinearProgress/> */}
                 </div>
             ) : (
                 reservesResponse.map((item:BookingItem2) => (
@@ -72,28 +70,29 @@ export default function BookingList() {
                         key={item._id}
                         className="text-xl text-center text-black font-bold bg-white 
                         rounded-2xl shadow-lg m-3 w-[50%] 
-                        flex flex-col gap-2 py-3 items-center justify-center"
+                        flex flex-col gap-2 py-6 items-center justify-center"
                     >
                         <div>Restaurant: {item.restaurant.name}</div>
                         <div className="">Name: {item.userName}</div> 
                         <div className="">Table: {item.table}</div>
                         <div>Start At: {new Date(item.start).toLocaleString()}</div>
                         <div>End At: {new Date(item.end).toLocaleString()} </div>
-                        
-                        <button
-                            onClick={() => {removeBookingHandler(item._id);}}
-                            className="w-fit  bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-3"
-                        >
-                            Remove Reservation
-                        </button>
-
-                        <Link href={`/booking/edit?id=${item._id}&rid=${item.restaurant.id}&name=${item.restaurant.name}&table=${item.table}`}>
+                        <div>
                             <button
-                                className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-[103%] m-2"
-                                >
-                                Edit Reservation
+                                onClick={() => {removeBookingHandler(item._id);}}
+                                className="w-fit  bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-105 m-3"
+                            >
+                                Remove Reservation
                             </button>
-                        </Link>
+
+                            <Link href={`/booking/edit?id=${item._id}&rid=${item.restaurant.id}&name=${item.restaurant.name}&table=${item.table}`}>
+                                <button
+                                    className="bg-[#e5fdff] text-xl text-black border border-[#CCECEE] font-semibold p-2 rounded-xl transition delay-75 hover:bg-[#CCECEE] hover:border-collapse hover:scale-105 m-2"
+                                    >
+                                    Edit Reservation
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 ))
             )}

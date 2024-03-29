@@ -62,7 +62,7 @@ export default function RestaurantDetailPage({params} : {params: {rid:string}}) 
                             <Link href={`/booking?id=${params.rid}&name=${(restaurant).name}`}>
                                 <button className="block rounded-md hover:bg-[#d84d5b] transition duration-100
                                 hover:scale-105 bg-[#b9424e] px-5 py-3 text-white shadow-lg m-auto"
-                                onClick={()=>toast.success('pls login first')}>
+                                onClick={()=>toast.success('Reserve successfully🥳')}>
                                     Make Reservations
                                 </button>
                             </Link>

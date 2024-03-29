@@ -6,7 +6,7 @@ import { useEffect,useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
-import { LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material"
 import { revalidateTag } from "next/cache";
 import getUserProfile from "@/libs/getUserProfile";
 

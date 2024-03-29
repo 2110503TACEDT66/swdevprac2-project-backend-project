@@ -5,9 +5,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import { LinearProgress } from "@mui/material"
 
 
-export default function RestaurantDetailPage({params} : {params: {rid:string}}) {
+export default function RestaurantDetailPage({ params }: { params: { rid: string } }) {
     const [restaurant, setRestaurant] = useState<RestaurantItem>({
         _id: '',
         name: '',
@@ -17,24 +18,41 @@ export default function RestaurantDetailPage({params} : {params: {rid:string}}) 
         postalcode: '',
         tel: '',
         openingHours: {
-          dayOfWeek: '',
-          opens: '' ,
-          closes: '' 
+            dayOfWeek: '',
+            opens: '',
+            closes: ''
         },
         table: [],
         picture: '',
         __v: 0,
         id: ''
-      });
+    });
 
     const session = useSession()
     useEffect(() => {
         const fetchData = async () => {
-            const restaurName = await getRestaurant(params.rid);
-            setRestaurant(restaurName.data);
+            try {
+                const restaurName = await getRestaurant(params.rid);
+                setRestaurant(restaurName.data);
+                
+            }
+            catch (error) {
+                console.error("Cannot Fetch Reserves:", error);
+                return null; // Return an empty array as a fallback value
+            } finally {
+                setIsLoading(false);
+            }
+
         }
-        fetchData();
-    },[]);
+       
+            fetchData();
+       
+    }, []);
+
+    const [isLoading, setIsLoading] = useState(true)
+    if (isLoading) {
+        return <LinearProgress />
+    }
     // try {
     //     var restaurant= await getRestaurant(params.rid)
     // } catch (err) {
@@ -84,5 +102,6 @@ export default function RestaurantDetailPage({params} : {params: {rid:string}}) 
                     </div>
                 </div>
         </main>
+
     )
 }

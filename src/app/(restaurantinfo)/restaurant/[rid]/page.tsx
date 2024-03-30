@@ -64,8 +64,7 @@ export default function RestaurantDetailPage({ params }: { params: { rid: string
                 <div className="flex my-5 justify-center bg-white p-8 rounded-2xl shadow-lg ">
                     <Image src={ (restaurant).picture} alt='Restaurant Image' 
                     width={0} height={0} sizes="100vw"
-                    objectFit="cover"
-                    className="rounded-lg w-[30%] min-w-48 h-auto"/>
+                    className="rounded-lg w-[30%] min-w-48 h-auto object-cover"/>
                     <div className="text-left flex justify-center bg-[#F5F5F5] rounded-lg p-5 items-center m-10 shadow-lg ">
                         <div className="flex flex-col gap-4 items-center justify-center ">
                             <div className="text-2xl text-black mx-5 text-center">
@@ -82,7 +81,7 @@ export default function RestaurantDetailPage({ params }: { params: { rid: string
                                 <Link href={`/booking?id=${params.rid}&name=${(restaurant).name}`}>
                                     <button className="block rounded-md hover:bg-[#d84d5b] transition duration-100
                                     hover:scale-105 bg-[#b9424e] px-5 py-3 text-white shadow-lg m-auto"
-                                    onClick={()=>toast.success('pls login first')}>
+                                    onClick={()=>toast.success('yay')}>
                                         Make Reservation
                                     </button>
                                 </Link>
